@@ -1,3 +1,5 @@
+main :: IO ()
+main = putStrLn "Programa cargado correctamente"
 --Definiciones
 data TreeEx d = Null | Node d [TreeEx d] deriving(Show, Eq)
 data Prop = 
@@ -55,26 +57,26 @@ checkTree (Node p []) list = include p list
 
 --Otras Funciones
 --1
-cantidadElementos :: TreeEx d -> Int
-cantidadElementos (Node d []) = 1
-cantidadElementos (Node d lst )  = 1 + itera lst
-        where itera :: [TreeEx d] -> Int 
-            itera (x:xs) = cantidadElementos x + itera xs
-            itera [] = 0
+cantidadElementos :: TreeEx a -> Int
+cantidadElementos Null = 0
+cantidadElementos (Node _ xs) = 1 + itera xs
+  where
+    itera (x:xs) = cantidadElementos x + itera xs
+    itera [] = 0
 
 --2
 busca ::(Eq d)=> TreeEx d -> d -> Bool
 busca (Node d []) f = f == d
 busca (Node d (x:xs)) f = not(not(d == f) && (busca x f) && (itera xs f))
-    where itera :: (Eq d) => [TreeEx d] -> d -> Bool
-        itera (x:xs) f = (busca x f) && (itera xs f)
-        itera [] _ = True
+    where 
+     itera (x:xs) f = (busca x f) && (itera xs f)
+     itera [] _ = True
 
 --3
 sumaElementos :: TreeEx Int -> Int
 sumaElementos (Node n []) = n
 sumaElementos (Node n (x:xs)) =  n + (sumaElementos x) + (itera xs)
-    where itera :: [TreeEx Int] -> Int
+    where
         itera (x:xs) = (sumaElementos x) + (itera xs)
         itera [] = 0
 
@@ -91,10 +93,10 @@ preOrden (Node d lst) = d : iterar lst
 altura :: TreeEx d -> Int
 altura (Node _ []) = 1
 altura (Node _ (x:xs)) =
-    1 + max (altura x) (alturaLista xs)
+    1 + max1 (altura x) (alturaLista xs)
     where
         alturaLista [] = 0
-        alturaLista (y:ys) = max (altura y) (alturaLista ys)
+        alturaLista (y:ys) = max1(altura y) (alturaLista ys)
 
 --6
 espejo :: TreeEx d -> TreeEx d
@@ -130,8 +132,8 @@ include elem (head : sublist)
     | elem == head = True
     | otherwise    = include elem sublist
 
-max :: Ord a => a -> a -> a
-max a b
+max1 :: Ord a => a -> a -> a
+max1 a b
     | a >= b    = a
     | otherwise = b
 
